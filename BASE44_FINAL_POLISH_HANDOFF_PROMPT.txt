@@ -1,0 +1,151 @@
+⛔ STRICT BASE44 / MANUS / SUPER AGENT ENFORCEMENT RULES — READ FIRST
+
+MODE:
+FIX-ONLY BUILD COMPILER MODE
+FINAL POLISH / RESPONSIVENESS / LOGO INTEGRATION ONLY
+NO FULL REBUILD
+NO DESTRUCTIVE REFACTOR
+NO FEATURE DRIFT
+NO DUPLICATE SYSTEMS
+NO FAKE BUTTONS
+NO PLACEHOLDER-ONLY CORE FEATURES
+NO UNRELATED REWRITES
+NO ALTERING WORKING LOGIC OUTSIDE ALLOWED FILES
+NO CROSS-RUN DRIFT
+NO CREDIT-WASTING LOOPS
+
+PROJECT:
+4P3X ScenarioForge OS™
+AI-Powered Scenario Simulation, Decision Mapping & Future Planning Platform
+Powered by 4P3X Intelligent AI™ Created by Kyzel Kreates™
+
+CURRENT STATUS:
+A working Vite / React / local-first product has already been built and packaged. It includes the enhanced wow-factor layer: cinematic landing page, scenario intelligence orb, Agent Council, Scenario Matrix, Intelligence Feed, stakeholder impact heatmap, decision branch rail, timeline simulator, report exporter, mobile PWA companion, settings, API Config Guard™, manifest, service worker, Supabase SQL text file and README.
+
+MISSION:
+Perform a production-grade final polish pass only. Make the product look premium, futuristic, aligned, responsive, portfolio-ready and demo-ready. Preserve the existing app architecture, SSOT, scoring logic, demo/live logic, PWA files and safety boundaries.
+
+FILES / FOLDERS ALLOWED TO TOUCH:
+- src/styles.css
+- src/main.jsx only for small layout/accessibility/copy fixes
+- src/data.js only for minor wording/demo-content improvements
+- README.md only for final wording if needed
+- public/ only for replacing placeholder icons/logo assets if supplied
+- index.html only for title/meta/theme-color polish
+- manifest.webmanifest only for icon/name/display polish
+
+FILES / FOLDERS FORBIDDEN TO BREAK OR REPLACE:
+- Do not replace the whole app
+- Do not create a second app structure
+- Do not delete src/storage.js
+- Do not bypass src/storage.js as the local-first SSOT
+- Do not remove src/engines.js scoring/agent logic
+- Do not remove demo/live mode
+- Do not remove API Config Guard™ safety warnings
+- Do not remove PWA manifest/service worker
+- Do not remove Supabase SQL text file
+- Do not hardcode backend-only secrets
+- Do not add unnecessary dependencies
+- Do not change branding away from 4P3X ScenarioForge OS™ / 4P3X Intelligent AI™ Created by Kyzel Kreates™
+
+BRANDING / LOGO INTEGRATION:
+I will upload two logo files: a landscape logo and a square/box logo.
+Use them carefully:
+- Landscape logo: header/nav/home hero/footer-style brand areas where it fits naturally.
+- Square/box logo: app icon/brand mark/card badge areas where it fits naturally.
+- Preserve text branding as fallback if images fail.
+- Do not stretch logos badly.
+- Do not place logos over unreadable backgrounds.
+- Keep contrast strong.
+- Keep the futuristic black / metallic gold / metallic silver / green / purple style.
+
+REQUIRED FINAL POLISH WORK:
+1. Inspect the project before editing.
+2. Run or verify the app structure.
+3. Polish global responsiveness across mobile, tablet, laptop and desktop.
+4. Ensure no text overflows cards.
+5. Ensure the navigation works on mobile and hamburger menu closes correctly.
+6. Ensure all cards align cleanly in grids.
+7. Ensure the hero section is visually impressive but readable.
+8. Ensure the Agent Council / AI Arena feels premium and intelligent.
+9. Ensure the report/export page looks credible and not like a placeholder.
+10. Ensure the settings/API Config Guard™ page clearly separates demo/live mode and never suggests frontend secrets are allowed.
+11. Ensure empty/loading/error/success states are visually supported where relevant.
+12. Ensure buttons have clear hover/focus states.
+13. Ensure keyboard focus is visible.
+14. Ensure colour contrast is strong enough.
+15. Ensure PWA manifest and service worker remain intact.
+16. Ensure app builds successfully with npm run build.
+17. Remove any stray rendered code, handoff prompt text, debug text, malformed symbols or duplicate sections if found.
+18. Do not add fake backend connectivity. Keep backend-ready language honest.
+
+SSOT RULES:
+- src/storage.js remains the local-first Single Source of Truth.
+- All state must continue to flow through the existing loadState/saveState/mutation approach.
+- No duplicate state stores.
+- No hidden state.
+- No hardcoded business logic outside approved config/data/engine files.
+- Demo mode must remain globally toggleable.
+- Demo data must remain clearly labelled.
+- Live mode must remain backend-ready only until real backend config is supplied.
+
+API / ENVIRONMENT SAFETY:
+Preserve 4P3X API Config Guard™:
+- No backend-only secrets in frontend/public code.
+- Never expose, guess, search for, hardcode, commit, log or export backend-only secrets.
+- Block frontend use of SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY, GROQ_API_KEY, STRIPE_SECRET_KEY, DATABASE_URL, JWT_SECRET, PRIVATE_KEY, WEBHOOK_SECRET and admin tokens.
+- Missing keys should disable only dependent features.
+- Show masked status only where relevant.
+
+PWA REQUIREMENTS:
+- Preserve manifest.webmanifest.
+- Preserve public/sw.js.
+- Keep installable PWA readiness.
+- Keep offline fallback safe.
+- Validate mobile layout and installability basics.
+
+AI AGENT SAFETY RULES:
+The 4P3X Strategy AI™, 4P3X Risk AI™, 4P3X Evidence AI™ and 4P3X Execution AI™ must remain bounded advisory agents.
+They must not:
+- guarantee funding, adoption, legal compliance, safety or success
+- fabricate evidence
+- make final legal/safety/safeguarding decisions
+- claim real backend analysis unless backend is configured
+- pretend live integrations exist
+
+VALIDATION GATES:
+Before completion, verify:
+- npm install works if dependencies are missing
+- npm run build passes
+- no console-blocking syntax errors
+- navigation works
+- mobile hamburger works
+- report download works
+- demo/live toggle works
+- reset demo data works
+- scenario template creation works
+- responsive layout works at 320px, 375px, 430px, 768px, 1024px, 1366px and large desktop
+- no visible stray code or duplicated handoff text appears in the UI
+- no backend-only secrets are present in frontend files
+
+ROLLBACK INSTRUCTIONS:
+If polish breaks the app, revert the last edited file only. Do not rebuild the entire project. Restore the previous working version of src/main.jsx or src/styles.css and re-run npm run build.
+
+STOP CONDITIONS:
+Stop and report instead of editing if:
+- required files are missing
+- the project is not the expected Vite/React app
+- edits would require replacing the whole app
+- logo files are unreadable or incompatible
+- requested changes conflict with SSOT/demo-live/API safety rules
+- npm run build fails for reasons unrelated to your edits and cannot be safely fixed within allowed files
+
+FINAL OUTPUT REQUIRED FROM BASE44:
+- Summary of files changed
+- Confirmation npm run build passed
+- Confirmation responsive checks completed
+- Confirmation no secrets were added
+- Confirmation SSOT/demo-live/PWA safety preserved
+- Any remaining limitations or manual checks
+
+Directive 1: Adapt the skill set to the task. Include full folder structure, program code, logic code, transition code, UI logic, UI code, and HTML/JSX where required. Preserve SSOT, prevent feature creep, and protect working systems.

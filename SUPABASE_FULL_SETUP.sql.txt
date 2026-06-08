@@ -1,0 +1,193 @@
+-- 4P3X ScenarioForge OS™ Supabase backend-ready SQL
+-- Type: FULL BACKEND SETUP / MIGRATION FOUNDATION
+-- RLS: ENABLED on all app tables
+-- Execution order: extensions, tables, constraints, indexes, functions, triggers, RLS, policies, seed data, verification
+
+-- 1. EXTENSIONS
+create extension if not exists pgcrypto;
+
+-- 2. TABLES
+create table if not exists public.scenarioforge_organisations (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  plan text not null default 'demo',
+  created_by uuid,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.scenarioforge_profiles (
+  id uuid primary key,
+  organisation_id uuid references public.scenarioforge_organisations(id) on delete set null,
+  display_name text not null,
+  role text not null default 'viewer' check (role in ('owner','admin','analyst','viewer')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.scenarioforge_scenarios (
+  id uuid primary key default gen_random_uuid(),
+  organisation_id uuid references public.scenarioforge_organisations(id) on delete cascade,
+  owner_id uuid references public.scenarioforge_profiles(id) on delete set null,
+  title text not null,
+  sector text not null default 'Custom',
+  status text not null default 'draft',
+  goal text not null default '',
+  timeframe text not null default '',
+  confidence integer not null default 50 check (confidence >= 0 and confidence <= 100),
+  payload jsonb not null default '{}'::jsonb,
+  is_demo boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.scenarioforge_evidence (
+  id uuid primary key default gen_random_uuid(),
+  scenario_id uuid not null references public.scenarioforge_scenarios(id) on delete cascade,
+  title text not null,
+  evidence_type text not null default 'general',
+  strength integer not null default 50 check (strength >= 0 and strength <= 100),
+  notes text,
+  is_demo boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.scenarioforge_reports (
+  id uuid primary key default gen_random_uuid(),
+  scenario_id uuid not null references public.scenarioforge_scenarios(id) on delete cascade,
+  title text not null,
+  report_text text not null,
+  report_json jsonb not null default '{}'::jsonb,
+  created_by uuid references public.scenarioforge_profiles(id) on delete set null,
+  is_demo boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.scenarioforge_audit_log (
+  id uuid primary key default gen_random_uuid(),
+  organisation_id uuid references public.scenarioforge_organisations(id) on delete cascade,
+  scenario_id uuid references public.scenarioforge_scenarios(id) on delete cascade,
+  actor_id uuid references public.scenarioforge_profiles(id) on delete set null,
+  action text not null,
+  scope text not null default 'system',
+  metadata jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+-- 3. CONSTRAINTS / SUPPORT CHECKS
+alter table public.scenarioforge_scenarios
+  add constraint scenarioforge_payload_object check (jsonb_typeof(payload) = 'object');
+
+-- 4. INDEXES
+create index if not exists idx_scenarioforge_profiles_org on public.scenarioforge_profiles(organisation_id);
+create index if not exists idx_scenarioforge_scenarios_org on public.scenarioforge_scenarios(organisation_id);
+create index if not exists idx_scenarioforge_scenarios_owner on public.scenarioforge_scenarios(owner_id);
+create index if not exists idx_scenarioforge_scenarios_demo on public.scenarioforge_scenarios(is_demo);
+create index if not exists idx_scenarioforge_evidence_scenario on public.scenarioforge_evidence(scenario_id);
+create index if not exists idx_scenarioforge_reports_scenario on public.scenarioforge_reports(scenario_id);
+create index if not exists idx_scenarioforge_audit_org on public.scenarioforge_audit_log(organisation_id);
+create index if not exists idx_scenarioforge_audit_scenario on public.scenarioforge_audit_log(scenario_id);
+
+-- 5. FUNCTIONS
+create or replace function public.scenarioforge_set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create or replace function public.scenarioforge_user_org_id()
+returns uuid
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select organisation_id from public.scenarioforge_profiles where id = auth.uid();
+$$;
+
+-- 6. TRIGGERS
+drop trigger if exists trg_scenarioforge_organisations_updated on public.scenarioforge_organisations;
+create trigger trg_scenarioforge_organisations_updated
+before update on public.scenarioforge_organisations
+for each row execute function public.scenarioforge_set_updated_at();
+
+drop trigger if exists trg_scenarioforge_profiles_updated on public.scenarioforge_profiles;
+create trigger trg_scenarioforge_profiles_updated
+before update on public.scenarioforge_profiles
+for each row execute function public.scenarioforge_set_updated_at();
+
+drop trigger if exists trg_scenarioforge_scenarios_updated on public.scenarioforge_scenarios;
+create trigger trg_scenarioforge_scenarios_updated
+before update on public.scenarioforge_scenarios
+for each row execute function public.scenarioforge_set_updated_at();
+
+drop trigger if exists trg_scenarioforge_evidence_updated on public.scenarioforge_evidence;
+create trigger trg_scenarioforge_evidence_updated
+before update on public.scenarioforge_evidence
+for each row execute function public.scenarioforge_set_updated_at();
+
+-- 7. RLS ENABLEMENT
+alter table public.scenarioforge_organisations enable row level security;
+alter table public.scenarioforge_profiles enable row level security;
+alter table public.scenarioforge_scenarios enable row level security;
+alter table public.scenarioforge_evidence enable row level security;
+alter table public.scenarioforge_reports enable row level security;
+alter table public.scenarioforge_audit_log enable row level security;
+
+-- 8. POLICIES
+drop policy if exists "org members can read organisation" on public.scenarioforge_organisations;
+create policy "org members can read organisation" on public.scenarioforge_organisations
+for select using (id = public.scenarioforge_user_org_id());
+
+drop policy if exists "owners can update organisation" on public.scenarioforge_organisations;
+create policy "owners can update organisation" on public.scenarioforge_organisations
+for update using (id = public.scenarioforge_user_org_id() and exists (select 1 from public.scenarioforge_profiles p where p.id = auth.uid() and p.role in ('owner','admin')));
+
+drop policy if exists "users can read own org profiles" on public.scenarioforge_profiles;
+create policy "users can read own org profiles" on public.scenarioforge_profiles
+for select using (organisation_id = public.scenarioforge_user_org_id() or id = auth.uid());
+
+drop policy if exists "users can update own profile" on public.scenarioforge_profiles;
+create policy "users can update own profile" on public.scenarioforge_profiles
+for update using (id = auth.uid());
+
+drop policy if exists "org members can manage scenarios" on public.scenarioforge_scenarios;
+create policy "org members can manage scenarios" on public.scenarioforge_scenarios
+for all using (organisation_id = public.scenarioforge_user_org_id()) with check (organisation_id = public.scenarioforge_user_org_id());
+
+drop policy if exists "org members can manage evidence" on public.scenarioforge_evidence;
+create policy "org members can manage evidence" on public.scenarioforge_evidence
+for all using (exists (select 1 from public.scenarioforge_scenarios s where s.id = scenario_id and s.organisation_id = public.scenarioforge_user_org_id()))
+with check (exists (select 1 from public.scenarioforge_scenarios s where s.id = scenario_id and s.organisation_id = public.scenarioforge_user_org_id()));
+
+drop policy if exists "org members can manage reports" on public.scenarioforge_reports;
+create policy "org members can manage reports" on public.scenarioforge_reports
+for all using (exists (select 1 from public.scenarioforge_scenarios s where s.id = scenario_id and s.organisation_id = public.scenarioforge_user_org_id()))
+with check (exists (select 1 from public.scenarioforge_scenarios s where s.id = scenario_id and s.organisation_id = public.scenarioforge_user_org_id()));
+
+drop policy if exists "org members can read audit" on public.scenarioforge_audit_log;
+create policy "org members can read audit" on public.scenarioforge_audit_log
+for select using (organisation_id = public.scenarioforge_user_org_id());
+
+-- 9. SEED / DEMO DATA
+-- Demo data should be inserted only into isolated demo organisations or local demo mode.
+-- Do not mix demo records with live records.
+
+-- 10. VERIFICATION QUERIES
+select 'scenarioforge_organisations' as table_name, count(*) from public.scenarioforge_organisations
+union all select 'scenarioforge_profiles', count(*) from public.scenarioforge_profiles
+union all select 'scenarioforge_scenarios', count(*) from public.scenarioforge_scenarios
+union all select 'scenarioforge_evidence', count(*) from public.scenarioforge_evidence
+union all select 'scenarioforge_reports', count(*) from public.scenarioforge_reports
+union all select 'scenarioforge_audit_log', count(*) from public.scenarioforge_audit_log;
+
+-- ROLLBACK NOTES:
+-- For a full rollback in a fresh demo project only, drop in reverse dependency order:
+-- drop table if exists public.scenarioforge_audit_log, public.scenarioforge_reports, public.scenarioforge_evidence, public.scenarioforge_scenarios, public.scenarioforge_profiles, public.scenarioforge_organisations cascade;
+-- drop function if exists public.scenarioforge_user_org_id();
+-- drop function if exists public.scenarioforge_set_updated_at();
