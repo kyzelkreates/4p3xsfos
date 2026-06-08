@@ -170,9 +170,9 @@ function HomePage({ setView, scenario, scores, state, mutate }) {
       <div className="heroText glass">
         <span className="eyebrow">
           <Sparkles size={14} aria-hidden="true" />
-          {BRAND.portfolio}
+          4P3X Verse™ — One Architecture. Many AI Products.
         </span>
-        <h1>{BRAND.product}</h1>
+        <h1 className="heroTitle">{BRAND.product}</h1>
         <p>
           {BRAND.strapline}. Model complex decisions, map stakeholders, compare decision branches,
           simulate future outcomes, and export evidence-based intelligence reports.

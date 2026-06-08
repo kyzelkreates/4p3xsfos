@@ -1183,7 +1183,7 @@ p.muted { font-size: 13px; }
   :root { --nav-w: 280px; }
   .hero { grid-template-columns: 1fr 420px; gap: 32px; padding: 36px 32px; }
   .heroText { padding: 56px 50px; }
-  .hero h1 { font-size: 76px; }
+  .hero h1, .heroTitle { font-size: 76px; }
   .page { padding: 36px 32px; }
 }
 
@@ -1195,6 +1195,7 @@ p.muted { font-size: 13px; }
   .hero h1 { font-size: clamp(38px, 4.2vw, 66px); }
   .verseCapabilities { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .matrixGrid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .heroTitle { font-size: clamp(38px, 4.2vw, 66px); }
 }
 
 /* =====================================================================
@@ -1211,7 +1212,7 @@ p.muted { font-size: 13px; }
 
   .holoPanel { position: static; }
 
-  .hero h1 {
+  .hero h1, .heroTitle {
     font-size: clamp(36px, 5.5vw, 64px);
     letter-spacing: -.03em;
   }
@@ -1234,7 +1235,7 @@ p.muted { font-size: 13px; }
 
   .navList button { font-size: 12px; padding: 8px 9px; gap: 7px; }
 
-  .hero h1 { font-size: clamp(32px, 5vw, 52px); }
+  .hero h1, .heroTitle { font-size: clamp(32px, 5vw, 52px); }
 
   .heroText { padding: 32px 28px; }
 
@@ -1287,7 +1288,7 @@ p.muted { font-size: 13px; }
   .heroText { padding: 28px 24px; }
   .heroText::before { display: none; }
 
-  .hero h1 {
+  .hero h1, .heroTitle {
     font-size: clamp(30px, 8vw, 48px);
     letter-spacing: -.02em;
   }
@@ -1346,7 +1347,7 @@ p.muted { font-size: 13px; }
   .hero { padding: 12px; }
   .heroText { padding: 24px 18px; }
 
-  .hero h1 {
+  .hero h1, .heroTitle {
     font-size: clamp(28px, 9.5vw, 40px);
     letter-spacing: -.02em;
   }
@@ -1389,7 +1390,7 @@ p.muted { font-size: 13px; }
    RESPONSIVE — VERY SMALL (max 360px)
    ===================================================================== */
 @media (max-width: 360px) {
-  .hero h1 { font-size: 26px; }
+  .hero h1, .heroTitle { font-size: 26px; }
   .brand strong { font-size: 11px; }
   .grid.four { grid-template-columns: 1fr; }
   .matrixGrid { grid-template-columns: 1fr 1fr; }
